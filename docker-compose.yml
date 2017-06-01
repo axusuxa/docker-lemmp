@@ -1,0 +1,29 @@
+version: '3'
+services:
+  php:
+    build: ./php
+    volumes:
+      - ./htdocs:/var/www/html
+    depends_on:
+      - mysql
+      - memcached
+  nginx:
+    image: nginx:latest
+    ports:
+      - "88:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./htdocs:/var/www/html
+    depends_on:
+      - php
+  memcached:
+    image: memcached:alpine
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: db01
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpassword
+    volumes:
+      - ./mysql:/var/lib/mysql
